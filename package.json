@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "generate:types": "openapi-typescript http://localhost:8000/api/schema/ -o src/types/api.ts"
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "openapi-typescript": "^7.10.1"
+  }
 }
