@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model World {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  tickRate  Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  players   Player[]
+  units     Unit[]
+  buildings Building[]
+}
+
+model Player {
+  id        String    @id @default(uuid())
+  worldId   String
+  world     World     @relation(fields: [worldId], references: [id])
+  name      String
+  resources Json // Store resources as JSON (e.g., { "gold": 100, "wood": 50 })
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  units     Unit[]
+  buildings Building[]
+}
+
+model Unit {
+  id        String   @id @default(uuid())
+  worldId   String
+  world     World    @relation(fields: [worldId], references: [id])
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  type      String // e.g., "infantry", "tank"
+  position  Json // Store position as JSON (e.g., { "x": 10, "y": 20 })
+  hp        Int
+  attack    Int
+  defense   Int
+  speed     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Building {
+  id        String   @id @default(uuid())
+  worldId   String
+  world     World    @relation(fields: [worldId], references: [id])
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  type      String // e.g., "headquarters", "barracks"
+  position  Json // Store position as JSON (e.g., { "x": 5, "y": 5 })
+  hp        Int
+  level     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
