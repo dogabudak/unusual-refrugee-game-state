@@ -10,14 +10,18 @@ datasource db {
 }
 
 model World {
-  id        String    @id @default(uuid())
-  name      String    @unique
-  tickRate  Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  players   Player[]
-  units     Unit[]
-  buildings Building[]
+  id           String         @id @default(uuid())
+  name         String         @unique
+  tickRate     Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  players      Player[]
+  units        Unit[]
+  buildings    Building[]
+  hexTiles     HexTile[]
+  interactables Interactable[]
+  mapItems     MapItem[]
+  worldStates  WorldState[]
 }
 
 model Player {
@@ -60,4 +64,41 @@ model Building {
   level     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model HexTile {
+  id          String  @id @default(uuid())
+  worldId     String
+  world       World   @relation(fields: [worldId], references: [id])
+  q           Int
+  r           Int
+  terrainType String?
+  elevation   Int?
+  isPassable  Boolean?
+}
+
+model Interactable {
+  id        String   @id @default(uuid())
+  worldId   String
+  world     World    @relation(fields: [worldId], references: [id])
+  type      String
+  position  Json
+  data      Json?
+}
+
+model MapItem {
+  id        String   @id @default(uuid())
+  worldId   String
+  world     World    @relation(fields: [worldId], references: [id])
+  type      String
+  position  Json
+  data      Json?
+}
+
+model WorldState {
+  id      String   @id @default(uuid())
+  worldId String
+  world   World    @relation(fields: [worldId], references: [id])
+  tick    Int
+  state   Json
 }

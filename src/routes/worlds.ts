@@ -27,4 +27,21 @@ router.get('/:worldId/state', async (req, res) => {
   }
 });
 
+router.post('/:worldId/commands', async (req, res) => {
+    const { worldId } = req.params;
+    const { commands } = req.body;
+
+    if (!commands || !Array.isArray(commands)) {
+        return res.status(400).json({ error: 'Commands must be an array' });
+    }
+
+    console.log(`Received commands for world ${worldId}:`, commands);
+
+    // In a real implementation, you would queue these commands
+    // for processing by the game engine's tick.
+    // e.g., await queue.add('process-commands', { worldId, commands });
+
+    res.json({ message: 'Commands received' });
+});
+
 export default router;
